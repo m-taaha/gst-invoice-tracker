@@ -1,5 +1,9 @@
-import { calcInvoiceTotals, calcLineItem, formatINR } from "../utils/gst";
+import { Download } from "lucide-react";
+import { calcInvoiceTotals, calcLineItem, formatINR } from "../utils /gst";
 import type { InvoiceData } from "../types/invoice";
+import { downloadInvoicePDF } from "../utils /pdf";
+
+
 
 interface Props {
   data: InvoiceData;
@@ -10,6 +14,18 @@ export default function InvoicePreview({ data }: Props) {
 
   return (
     <main className="flex-1 overflow-y-auto bg-slate-950 p-8">
+      {/* Download Button Section */}
+      <div className="max-w-3xl mx-auto mb-4 flex justify-end">
+        <button
+          onClick={() => downloadInvoicePDF(data)}
+          className="flex items-center gap-2 bg-indigo-500 hover:bg-indigo-400 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors shadow-lg shadow-indigo-500/20"
+        >
+          <Download size={15} />
+          Download PDF
+        </button>
+      </div>
+
+      {/* Invoice Preview Container */}
       <div
         id="invoice-preview"
         className="max-w-3xl mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden"
