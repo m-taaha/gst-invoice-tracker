@@ -1,9 +1,9 @@
 import { Download } from "lucide-react";
-import { calcInvoiceTotals, calcLineItem, formatINR } from "../utils /gst";
+
 import type { InvoiceData } from "../types/invoice";
+
+import { calcInvoiceTotals, calcLineItem, formatINR } from "../utils /gst";
 import { downloadInvoicePDF } from "../utils /pdf";
-
-
 
 interface Props {
   data: InvoiceData;
@@ -68,7 +68,11 @@ export default function InvoicePreview({ data }: Props) {
             Bill To
           </p>
           <p className="font-semibold text-slate-800">
-            {data.buyer.name || "—"}
+            {data.buyer.name || (
+              <span className="text-slate-300 font-normal italic">
+                Client name
+              </span>
+            )}
           </p>
           <p className="text-slate-500 text-sm">{data.buyer.address}</p>
           <p className="text-slate-500 text-sm">{data.buyer.email}</p>
@@ -77,6 +81,21 @@ export default function InvoicePreview({ data }: Props) {
               GSTIN: {data.buyer.gstin}
             </p>
           )}
+
+          {/* Supply Type Badge */}
+          <div className="mt-3">
+            <span
+              className={`text-xs font-medium px-2.5 py-1 rounded-full ${
+                data.gstType === "intra"
+                  ? "bg-blue-50 text-blue-600"
+                  : "bg-purple-50 text-purple-600"
+              }`}
+            >
+              {data.gstType === "intra"
+                ? "Intra-State Supply"
+                : "Inter-State Supply"}
+            </span>
+          </div>
         </div>
 
         {/* Items Table */}

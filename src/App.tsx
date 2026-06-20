@@ -69,7 +69,7 @@ export default function App() {
         </div>
         <div className="flex items-center gap-4">
           <span className="text-slate-400 text-sm">
-            Taaha Khan • taahakhan@email.com
+            Mohammad Taaha Ashraf • mtaahaashraf@email.com
           </span>
 
           <a
