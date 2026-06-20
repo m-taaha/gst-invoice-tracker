@@ -1,9 +1,9 @@
 import { Download } from "lucide-react";
-
 import type { InvoiceData } from "../types/invoice";
-
 import { calcInvoiceTotals, calcLineItem, formatINR } from "../utils /gst";
 import { downloadInvoicePDF } from "../utils /pdf";
+
+
 
 interface Props {
   data: InvoiceData;
@@ -13,79 +13,84 @@ export default function InvoicePreview({ data }: Props) {
   const totals = calcInvoiceTotals(data.items, data.gstType);
 
   return (
-    <main className="flex-1 overflow-y-auto bg-slate-950 p-8">
-      {/* Download Button Section */}
-      <div className="max-w-3xl mx-auto mb-4 flex justify-end">
+    <main className="flex-1 h-full overflow-y-auto hide-scrollbar rounded-[32px] fade-in relative pb-10">
+      {/* Floating Action Bar */}
+      <div className="sticky top-0 right-0 z-10 flex justify-end p-4 pointer-events-none">
         <button
           onClick={() => downloadInvoicePDF(data)}
-          className="flex items-center gap-2 bg-indigo-500 hover:bg-indigo-400 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors shadow-lg shadow-indigo-500/20"
+          className="pointer-events-auto flex items-center gap-2 backdrop-blur-xl bg-gray-900/90 hover:bg-black active:scale-95 text-white text-xs font-semibold px-5 py-2.5 rounded-full transition-all duration-200 shadow-[0_8px_16px_rgba(0,0,0,0.15)]"
         >
-          <Download size={15} />
-          Download PDF
+          <Download size={14} strokeWidth={2.5} />
+          Export PDF
         </button>
       </div>
 
-      {/* Invoice Preview Container */}
+      {/* Invoice Card */}
       <div
         id="invoice-preview"
-        className="max-w-3xl mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden"
+        className="max-w-3xl mx-auto bg-white rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-black/[0.02] overflow-hidden fade-up -mt-2"
+        style={{ animationDelay: "0.1s" }}
       >
-        {/* Invoice Header */}
-        <div className="bg-slate-900 px-8 py-6 flex items-start justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-white tracking-tight">
-              {data.seller.name || "Your Business"}
+        {/* Header Region */}
+        <div className="px-10 py-10 flex items-start justify-between">
+          <div className="max-w-[60%]">
+            <h1 className="text-3xl font-bold text-gray-900 tracking-tight leading-none mb-3">
+              {data.seller.name || (
+                <span className="text-gray-300 font-normal">Your Business</span>
+              )}
             </h1>
-            <p className="text-slate-400 text-sm mt-1">{data.seller.address}</p>
-            <p className="text-slate-400 text-sm">{data.seller.email}</p>
-            {data.seller.gstin && (
-              <p className="text-slate-500 text-xs mt-1">
-                GSTIN: {data.seller.gstin}
-              </p>
-            )}
+            <div className="space-y-1 text-[13px] text-gray-500 leading-relaxed">
+              {data.seller.address && <p>{data.seller.address}</p>}
+              {data.seller.email && <p>{data.seller.email}</p>}
+              {data.seller.gstin && (
+                <p className="inline-block mt-1 bg-gray-100 text-gray-600 px-2 py-0.5 rounded text-[11px] font-medium">
+                  GSTIN: {data.seller.gstin}
+                </p>
+              )}
+            </div>
           </div>
           <div className="text-right">
-            <div className="inline-block bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-full mb-2">
-              TAX INVOICE
-            </div>
-            <p className="text-white font-mono font-semibold">
+            <span className="inline-block text-[10px] font-bold tracking-widest uppercase text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-full mb-4">
+              Tax Invoice
+            </span>
+            <p className="text-lg font-semibold text-gray-900 tracking-tight">
               {data.invoiceNumber}
             </p>
-            <p className="text-slate-400 text-sm">
+            <p className="text-[13px] text-gray-400 mt-1">
               {data.date
                 ? new Date(data.date + "T00:00:00").toLocaleDateString(
                     "en-IN",
-                    { day: "numeric", month: "long", year: "numeric" },
+                    { day: "numeric", month: "short", year: "numeric" },
                   )
                 : ""}
             </p>
           </div>
         </div>
 
-        {/* Bill To */}
-        <div className="px-8 py-5 border-b border-slate-100">
-          <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-2">
-            Bill To
-          </p>
-          <p className="font-semibold text-slate-800">
-            {data.buyer.name || (
-              <span className="text-slate-300 font-normal italic">
-                Client name
-              </span>
-            )}
-          </p>
-          <p className="text-slate-500 text-sm">{data.buyer.address}</p>
-          <p className="text-slate-500 text-sm">{data.buyer.email}</p>
-          {data.buyer.gstin && (
-            <p className="text-slate-400 text-xs mt-1">
-              GSTIN: {data.buyer.gstin}
+        {/* Bill To Section */}
+        <div className="px-10 py-8 bg-gray-50/50 border-y border-gray-100 flex justify-between items-start">
+          <div>
+            <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">
+              Billed To
             </p>
-          )}
-
-          {/* Supply Type Badge */}
-          <div className="mt-3">
+            <p className="text-[15px] font-semibold text-gray-900 mb-1">
+              {data.buyer.name || (
+                <span className="text-gray-400 font-normal">Client Name</span>
+              )}
+            </p>
+            <div className="space-y-0.5 text-[13px] text-gray-500">
+              {data.buyer.address && <p>{data.buyer.address}</p>}
+              {data.buyer.email && <p>{data.buyer.email}</p>}
+              {data.buyer.gstin && (
+                <p className="text-[11px] font-medium text-gray-400 mt-1">
+                  GSTIN: {data.buyer.gstin}
+                </p>
+              )}
+            </div>
+          </div>
+          <div className="text-right">
             <span
-              className={`text-xs font-medium px-2.5 py-1 rounded-full ${
+              className={`inline-block text-[11px] font-semibold px-3 py-1 rounded-full ${
                 data.gstType === "intra"
                   ? "bg-blue-50 text-blue-600"
                   : "bg-purple-50 text-purple-600"
@@ -99,53 +104,52 @@ export default function InvoicePreview({ data }: Props) {
         </div>
 
         {/* Items Table */}
-        <div className="px-8 py-5">
-          <table className="w-full text-sm">
+        <div className="px-10 py-8">
+          <table className="w-full text-[13px]">
             <thead>
-              <tr className="border-b border-slate-200">
-                <th className="text-left text-xs text-slate-400 uppercase tracking-wide pb-2 font-medium">
-                  Description
-                </th>
-                <th className="text-center text-xs text-slate-400 uppercase tracking-wide pb-2 font-medium">
-                  HSN
-                </th>
-                <th className="text-center text-xs text-slate-400 uppercase tracking-wide pb-2 font-medium">
-                  Qty
-                </th>
-                <th className="text-right text-xs text-slate-400 uppercase tracking-wide pb-2 font-medium">
-                  Rate
-                </th>
-                <th className="text-center text-xs text-slate-400 uppercase tracking-wide pb-2 font-medium">
-                  GST
-                </th>
-                <th className="text-right text-xs text-slate-400 uppercase tracking-wide pb-2 font-medium">
-                  Amount
-                </th>
+              <tr className="border-b-2 border-gray-100">
+                {["Description", "HSN", "Qty", "Rate", "GST", "Amount"].map(
+                  (h, i) => (
+                    <th
+                      key={h}
+                      className={`pb-3 text-[11px] font-bold text-gray-400 uppercase tracking-wider ${
+                        i === 0 ? "text-left" : "text-right"
+                      }`}
+                    >
+                      {h}
+                    </th>
+                  ),
+                )}
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-gray-50">
               {data.items.map((item) => {
-                const { subtotal, gstAmount, total } = calcLineItem(item);
+                const { gstAmount, total } = calcLineItem(item);
                 return (
-                  <tr key={item.id} className="border-b border-slate-50">
-                    <td className="py-3 text-slate-700 font-medium">
+                  <tr
+                    key={item.id}
+                    className="group hover:bg-gray-50/50 transition-colors"
+                  >
+                    <td className="py-4 text-gray-900 font-medium pr-4">
                       {item.description || "—"}
                     </td>
-                    <td className="py-3 text-center text-slate-400 font-mono text-xs">
+                    <td className="py-4 text-right text-gray-400 font-mono text-[11px]">
                       {item.hsn || "—"}
                     </td>
-                    <td className="py-3 text-center text-slate-600">
+                    <td className="py-4 text-right text-gray-600">
                       {item.qty}
                     </td>
-                    <td className="py-3 text-right text-slate-600 tabular">
+                    <td className="py-4 text-right text-gray-600 tabular">
                       {formatINR(item.rate)}
                     </td>
-                    <td className="py-3 text-center">
-                      <span className="bg-emerald-50 text-emerald-700 text-xs px-2 py-0.5 rounded-full font-medium">
-                        {item.gstRate}% • {formatINR(gstAmount)}
+                    <td className="py-4 text-right">
+                      <span className="inline-flex items-center gap-1 bg-gray-100 text-gray-600 text-[10px] font-semibold px-2 py-1 rounded-md">
+                        {item.gstRate}%{" "}
+                        <span className="text-gray-400 font-normal">|</span>{" "}
+                        {formatINR(gstAmount)}
                       </span>
                     </td>
-                    <td className="py-3 text-right font-semibold text-slate-800 tabular">
+                    <td className="py-4 text-right font-semibold text-gray-900 tabular">
                       {formatINR(total)}
                     </td>
                   </tr>
@@ -155,33 +159,41 @@ export default function InvoicePreview({ data }: Props) {
           </table>
         </div>
 
-        {/* Tax Breakdown */}
-        <div className="px-8 pb-6 flex justify-end">
-          <div className="w-72 space-y-2">
-            <div className="flex justify-between text-sm text-slate-500">
+        {/* Tax Summary */}
+        <div className="px-10 pb-10 flex justify-end">
+          <div className="w-72 bg-gray-50/80 rounded-[20px] p-6 space-y-3">
+            <div className="flex justify-between text-[13px] text-gray-500 font-medium">
               <span>Subtotal</span>
-              <span className="tabular">{formatINR(totals.subtotal)}</span>
+              <span className="tabular text-gray-900">
+                {formatINR(totals.subtotal)}
+              </span>
             </div>
             {data.gstType === "intra" ? (
               <>
-                <div className="flex justify-between text-sm text-slate-500">
+                <div className="flex justify-between text-[13px] text-gray-500 font-medium">
                   <span>CGST</span>
-                  <span className="tabular">{formatINR(totals.cgst)}</span>
+                  <span className="tabular text-gray-900">
+                    {formatINR(totals.cgst)}
+                  </span>
                 </div>
-                <div className="flex justify-between text-sm text-slate-500">
+                <div className="flex justify-between text-[13px] text-gray-500 font-medium">
                   <span>SGST</span>
-                  <span className="tabular">{formatINR(totals.sgst)}</span>
+                  <span className="tabular text-gray-900">
+                    {formatINR(totals.sgst)}
+                  </span>
                 </div>
               </>
             ) : (
-              <div className="flex justify-between text-sm text-slate-500">
+              <div className="flex justify-between text-[13px] text-gray-500 font-medium">
                 <span>IGST</span>
-                <span className="tabular">{formatINR(totals.igst)}</span>
+                <span className="tabular text-gray-900">
+                  {formatINR(totals.igst)}
+                </span>
               </div>
             )}
-            <div className="border-t border-slate-200 pt-2 flex justify-between font-bold text-slate-800">
-              <span>Total</span>
-              <span className="tabular text-indigo-600">
+            <div className="border-t border-gray-200/60 pt-3 flex justify-between items-center">
+              <span className="text-[15px] font-bold text-gray-900">Total</span>
+              <span className="text-lg font-bold text-indigo-600 tabular tracking-tight">
                 {formatINR(totals.grandTotal)}
               </span>
             </div>
@@ -190,26 +202,31 @@ export default function InvoicePreview({ data }: Props) {
 
         {/* Notes */}
         {data.notes && (
-          <div className="px-8 pb-6">
-            <div className="bg-slate-50 rounded-xl p-4">
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">
-                Notes
+          <div className="px-10 pb-10 fade-in">
+            <div className="border-l-2 border-indigo-200 pl-4 py-1">
+              <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">
+                Notes & Terms
               </p>
-              <p className="text-slate-600 text-sm">{data.notes}</p>
+              <p className="text-[13px] text-gray-600 leading-relaxed max-w-xl">
+                {data.notes}
+              </p>
             </div>
           </div>
         )}
 
         {/* Footer */}
-        <div className="bg-slate-50 px-8 py-4 flex items-center justify-between border-t border-slate-100">
-          <p className="text-xs text-slate-400">
-            Generated with GST Invoice Calculator
+        <div className="bg-gray-900 px-10 py-5 flex items-center justify-between">
+          <p className="text-[11px] font-medium text-gray-400">
+            GST Invoice Generator
           </p>
-          <p className="text-xs text-slate-400">
-            {data.gstType === "intra"
-              ? "Intra-State Supply"
-              : "Inter-State Supply"}
-          </p>
+          <div className="flex gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 my-auto"></span>
+            <p className="text-[11px] font-medium text-gray-400">
+              {data.gstType === "intra"
+                ? "Intra-State Supply"
+                : "Inter-State Supply"}
+            </p>
+          </div>
         </div>
       </div>
     </main>

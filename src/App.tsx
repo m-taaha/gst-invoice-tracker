@@ -1,9 +1,8 @@
 import { useState } from "react";
 import type { InvoiceData, LineItem, GSTType } from "./types/invoice";
-import { generateInvoiceNumber } from "./utils /gst";
 import Sidebar from "./components/Sidebar";
 import InvoicePreview from "./components/InvoicePreview";
-
+import { generateInvoiceNumber } from "./utils /gst";
 
 
 const emptyItem = (): LineItem => ({
@@ -54,36 +53,38 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col">
-      <header className="border-b border-slate-800 px-6 py-4 flex items-center justify-between">
+    <div className="h-screen overflow-hidden bg-[#F2F2F7] flex flex-col selection:bg-indigo-500/20">
+      {/* Topbar - Frosted Glass */}
+      <header className="fade-in backdrop-blur-xl bg-white/70 border-b border-black/[0.04] px-6 h-14 flex items-center justify-between sticky top-0 z-50">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-indigo-500 flex items-center justify-center">
-            <span className="text-white text-sm font-bold">G</span>
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-indigo-500 flex items-center justify-center shadow-md shadow-indigo-500/20">
+            <span className="text-white text-xs font-bold">G</span>
           </div>
-          <span className="text-white font-semibold tracking-tight">
-            GST Invoice Calculator
+          <span className="text-gray-900 font-semibold text-[15px] tracking-tight">
+            GST Invoice
           </span>
-          <span className="text-xs text-slate-500 bg-slate-800 px-2 py-0.5 rounded-full">
+          <span className="text-[10px] font-medium text-gray-500 bg-gray-200/50 px-2 py-0.5 rounded-full ml-1">
             India
           </span>
         </div>
         <div className="flex items-center gap-4">
-          <span className="text-slate-400 text-sm">
-            Mohammad Taaha Ashraf • mtaahaashraf@email.com
+          <span className="text-xs font-medium text-gray-400 hidden sm:block">
+            Mohammad Taaha Ashraf · mtaahaashraf@gmail.com
           </span>
 
           <a
             href="https://digitalheroesco.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs bg-indigo-500 hover:bg-indigo-400 text-white px-3 py-1.5 rounded-lg font-medium transition-colors"
+            className="text-xs bg-gray-900 hover:bg-gray-800 active:scale-95 text-white px-3.5 py-2 rounded-full font-medium transition-all duration-200 shadow-sm"
           >
             Built for Digital Heroes
           </a>
         </div>
       </header>
 
-      <div className="flex flex-1 overflow-hidden">
+      {/* Main Layout Area */}
+      <div className="flex flex-1 overflow-hidden p-4 sm:p-6 gap-6">
         <Sidebar
           data={data}
           onUpdateField={updateField}

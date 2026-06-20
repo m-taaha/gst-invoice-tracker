@@ -1,4 +1,5 @@
-import type { LineItem, GSTType } from "../src/types/invoice";
+import type { LineItem, GSTType } from "../types/invoice";
+
 
 export function calcLineItem(item: LineItem) {
   const subtotal = item.qty * item.rate;
