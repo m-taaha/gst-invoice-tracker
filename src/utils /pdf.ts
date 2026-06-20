@@ -66,7 +66,7 @@ export function downloadInvoicePDF(data: InvoiceData) {
 
   // line items table
   const rows = data.items.map((item) => {
-    const { subtotal, gstAmount, total } = calcLineItem(item);
+    const { gstAmount, total } = calcLineItem(item);
     return [
       item.description || "—",
       item.hsn || "—",

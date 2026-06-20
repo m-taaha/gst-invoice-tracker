@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { InvoiceData, LineItem, GSTType } from "./types/invoice";
+import type { InvoiceData, LineItem } from "./types/invoice";
 import Sidebar from "./components/Sidebar";
 import InvoicePreview from "./components/InvoicePreview";
 import { generateInvoiceNumber } from "./utils /gst";
@@ -49,6 +49,7 @@ export default function App() {
     setData((prev) => ({
       ...prev,
       items: prev.items.filter((i) => i.id !== id),
+
     }));
   }
 
